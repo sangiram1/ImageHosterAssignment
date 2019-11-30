@@ -7,7 +7,13 @@ import java.util.List;
 @Entity
 //@Table annotation provides more options to customize the mapping.
 //Here the name of the table to be created in the database is explicitly mentioned as 'Tags'. Hence the table named 'Tags' will be created in the database with all the columns mapped to all the attributes in 'Tag' class
-@Table(name = "Tags")
+/* Modified by Sangeeta to correct the issue with table creation for Many-to-Many Mapping
+ * PostgreSQL is case-insensitive but for Hibernate, the name Tags is different from tags
+ * Because of above deviation, Hibernate Dialect considers as if there is a change in Foreign Key  referring to "Tags"
+ * Hence, hibernate.hbm2ddl.auto = update causes to re-create the images_Tags table with Foreign Key"Tags"
+ */
+//@Table(name = "Tags")
+@Table(name = "tags")
 public class Tag {
 
   //@Id annotation specifies that the corresponding attribute is a primary key

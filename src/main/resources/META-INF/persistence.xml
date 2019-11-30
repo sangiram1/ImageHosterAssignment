@@ -13,7 +13,9 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/imageHoster"/>
 
       <property name="javax.persistence.jdbc.user" value="postgres"/>
-      <property name="javax.persistence.jdbc.password" value="password"/>
+      <!-- Modified by Sangeeta as part of including the right password of the postgres user in PostgreSQL-->
+      <!--<property name="javax.persistence.jdbc.password" value="password"/>-->
+      <property name="javax.persistence.jdbc.password" value="sangeeta"/>
 
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
       <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
