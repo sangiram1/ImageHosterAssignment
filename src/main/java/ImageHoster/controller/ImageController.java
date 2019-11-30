@@ -173,9 +173,34 @@ public class ImageController {
   //The method calls the deleteImage() method in the business logic passing the id of the image to be deleted
   //Looks for a controller method with request mapping of type '/images'
   @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
-  public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId) {
-    imageService.deleteImage(imageId);
-    return "redirect:/images";
+  //Modified by Sangeeta as part of Part A : Bug-Fix#2.2 : Non-owner should not delete other's images
+  //Get the logged in user from the HttpSession object and the owner of the image
+  //public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId) {
+  public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, Model model, HttpSession session) {
+    //Modified by Sangeeta as part of Part A : Bug-Fix#2.2 : Non-owner should not delete other's images
+    //If the loggedInUserId is the same as the imageOwnerId of the image, route to images.html
+    //If not, route to image.html page with an error message
+    //The error message should say "Only the owner of the image can delete the image"
+
+    //imageService.deleteImage(imageId);
+    //return "redirect:/images";
+
+    Image image = imageService.getImage(imageId);
+    User loggedInUser = (User) session.getAttribute("loggeduser");
+    Integer loggedInUserId = loggedInUser.getId();
+    Integer imageOwnerId = image.getUser().getId();
+    if (loggedInUserId == imageOwnerId) {
+      imageService.deleteImage(imageId);
+      return "redirect:/images"; // Route to images.html to display all images
+    } else {
+      //Add all the attributes to model object to display the details of the image correctly
+      List<Tag> tags = image.getTags();
+      model.addAttribute("image", image);
+      model.addAttribute("tags", tags);
+      String error = "Only the owner of the image can delete the image";
+      model.addAttribute("deleteError", error);
+      return "images/image"; //Route to image.html with an error message
+    }
   }
 
 

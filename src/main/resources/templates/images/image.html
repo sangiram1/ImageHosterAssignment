@@ -24,7 +24,8 @@
     </form>
     <!-- Show the delete error if the non owner of the image is trying to delete the image-->
     <!--Uncomment the below code to show the error if the non owner of the image is trying to delete the image-->
-    <!--<div th:if="${deleteError}">Only the owner of the image can delete the image</div>-->
+    <!-- Modified by Sangeeta as part of Part A : Bug-Fix#2.2 : Non-owner should not delete other's images -->
+    <div th:if="${deleteError}">Only the owner of the image can delete the image</div>
   </div>
 </nav>
 
