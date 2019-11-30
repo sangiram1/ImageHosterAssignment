@@ -45,9 +45,13 @@ public class ImageController {
   //Also now you need to add the tags of an image in the Model type object
   //Here a list of tags is added in the Model type object
   //this list is then sent to 'images/image.html' file and the tags are displayed
-  @RequestMapping("/images/{title}")
-  public String showImage(@PathVariable("title") String title, Model model) {
-    Image image = imageService.getImageByTitle(title);
+  //Modified by Sangeeta as part of Part A : Bug-Fix#1 : Error while viewing details of image with same title.
+  //@RequestMapping("/images/{title}") // Commented as part of Part A : Bug-Fix#1
+  //public String showImage(@PathVariable("title") String title, Model model) { // Commented as part of Part A : Bug-Fix#1
+  @RequestMapping("/images/{id}/{title}")
+  public String showImage(@PathVariable("id") Integer imageId, @PathVariable("title") String title, Model model) {
+    // Image image = imageService.getImageByTitle(title); // Commented as part of Part A : Bug-Fix#1
+    Image image = imageService.getImage(imageId);
     model.addAttribute("image", image);
     model.addAttribute("tags", image.getTags());
     return "images/image";
@@ -132,7 +136,10 @@ public class ImageController {
     updatedImage.setDate(new Date());
 
     imageService.updateImage(updatedImage);
-    return "redirect:/images/" + updatedImage.getTitle();
+    // Modified by Sangeeta as part of Part A : Bug-Fix#1 : Error while viewing details of image with same title
+    // Since the RequestMapping has been modified for the showImage method, this change is needed here
+    // return "redirect:/images/" + updatedImage.getTitle();
+    return "redirect:/images/" + updatedImage.getId() + "/" + updatedImage.getTitle();
   }
 
 
