@@ -249,13 +249,27 @@ public class ImageController {
   private String convertTagsToString(List<Tag> tags) {
     StringBuilder tagString = new StringBuilder();
 
-    for (int i = 0; i <= tags.size() - 2; i++) {
+    /* for (int i = 0; i <= tags.size() - 2; i++) {
       tagString.append(tags.get(i).getName()).append(",");
     }
-
     Tag lastTag = tags.get(tags.size() - 1);
     tagString.append(lastTag.getName());
+    return tagString.toString(); */
 
-    return tagString.toString();
+    /*Modified by Sangeeta as part of workaround to resolve the exception caused due to no tag assigned
+    * Ideally if tag/category is mandatory, then user should be presented with an error message.
+    * The error message should say "It is mandatory to assign atleast one tag/category to an image."
+    */
+    if (tags.size() >= 1) {
+      for (int i = 0; i <= tags.size() - 2; i++) {
+        tagString.append(tags.get(i).getName()).append(",");
+      }
+
+      Tag lastTag = tags.get(tags.size() - 1);
+      tagString.append(lastTag.getName());
+      return tagString.toString();
+    } else {
+      return "";
+    }
   }
 }
