@@ -40,9 +40,36 @@ public class UserController {
   //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
   //This method calls the business logic and after the user record is persisted in the database, directs to login page
   @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-  public String registerUser(User user) {
-    userService.registerUser(user);
-    return "redirect:/users/login";
+  //Modified by Sangeeta as part of Part B : Feature#1 - Implementing Password Strength Validation
+  //Pass the user entered password to checkPasswordStrength to find if it meets the required validations.
+  //Only if the entered password is valid, route to login.html page
+  //If not, route to registration.html page with an error message
+  //The error message would say "Password must contain at least 1 alphabet, 1 number & 1 special character"
+  //public String registerUser(User user) {
+  public String registerUser(User user, Model model) {
+    //userService.registerUser(user);
+    //return "redirect:/users/login";
+    boolean isValidPassword = checkPasswordStrength(user.getPassword());
+    if (isValidPassword) {
+      userService.registerUser(user);
+      // return "redirect:/users/login"; // Commented this to make the unit testcase work correctly
+      // Ideally this should be redirect:/users/login only as the URL has to be updated
+      // after successful registration. But, as per the instructions provided, to pass the testcases
+      // We need to follow the code mentioned in unit test classes. Below is the Query response URL:
+      // https://learn.upgrad.com/v/course/373/question/171492
+      // .andExpect(redirectedUrl("/users/login")) should be in place of
+      // .andExpect(view().name("users/login")) and following line in UserControllerTest.java
+      return "users/login"; //Route to login.html page on successful registration
+    } else {
+      //Adding the required attributes to Model object needed by registration.html
+      user = new User();
+      UserProfile profile = new UserProfile();
+      user.setProfile(profile);
+      model.addAttribute("User", user);
+      String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
+      model.addAttribute("passwordTypeError",error);
+      return "users/registration"; // Route to registration.html page if password strength not met
+    }
   }
 
   //This controller method is called when the request pattern is of type 'users/login'
@@ -78,5 +105,35 @@ public class UserController {
     List<Image> images = imageService.getAllImages();
     model.addAttribute("images", images);
     return "index";
+  }
+
+  //Added by Sangeeta as part of Part B : Feature#1 - Implementing Password Strength Validation
+  //This method will take the password input by the user and validate the following:
+  //Does the password entered has atleast one alphabet(a-z or A-Z)
+  //Does the password entered has atleast one digit(0-9)
+  //Does the password entered has atleast one special character(other than above two cases)
+  //If all the above conditions are satisfied, the method would return true else false
+  private boolean checkPasswordStrength(String password) {
+    char[] passwordChars = password.toCharArray();
+    int alphabetCount = 0;
+    int numberCount = 0;
+    int specialCharCount = 0;
+    boolean isValidPassword = false;
+    for (char letter : passwordChars) {
+      if (Character.isLowerCase(letter) == true || Character.isUpperCase(letter) == true) {
+        alphabetCount = alphabetCount + 1;
+      } else if (Character.isDigit(letter) == true) {
+        numberCount = numberCount + 1;
+      } else {
+        specialCharCount = specialCharCount + 1;
+      }
+    }
+
+    if (alphabetCount >= 1 && numberCount >= 1 && specialCharCount >= 1) {
+      isValidPassword = true;
+    } else {
+      isValidPassword = false;
+    }
+    return isValidPassword;
   }
 }
