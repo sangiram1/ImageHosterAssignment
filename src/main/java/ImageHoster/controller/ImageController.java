@@ -1,5 +1,6 @@
 package ImageHoster.controller;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import ImageHoster.model.Tag;
 import ImageHoster.model.User;
@@ -55,6 +56,10 @@ public class ImageController {
     Image image = imageService.getImage(imageId);
     model.addAttribute("image", image);
     model.addAttribute("tags", image.getTags());
+    //Modified by Sangeeta as part of Part B : Feature#2 - Implementing Add Comment Feature
+    //This will help display all the comments added to the given image
+    List<Comment> comments = image.getComments();
+    model.addAttribute("comments", comments);
     return "images/image";
   }
 
@@ -126,6 +131,10 @@ public class ImageController {
       model.addAttribute("editError", error);
       List<Tag> tags = image.getTags();
       model.addAttribute("tags", tags); //image.html needs list of tags attached to the image
+      //Modified by Sangeeta as part of Part B : Feature#2 - Implementing Add Comment Feature
+      //This will help display all the comments added to the given image
+      List<Comment> comments = image.getComments();
+      model.addAttribute("comments", comments);
       return "images/image";
     }
     //return "images/edit";
@@ -199,6 +208,10 @@ public class ImageController {
       model.addAttribute("tags", tags);
       String error = "Only the owner of the image can delete the image";
       model.addAttribute("deleteError", error);
+      //Modified by Sangeeta as part of Part B : Feature#2 - Implementing Add Comment Feature
+      //This will help display all the comments added to the given image
+      List<Comment> comments = image.getComments();
+      model.addAttribute("comments", comments);
       return "images/image"; //Route to image.html with an error message
     }
   }

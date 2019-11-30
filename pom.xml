@@ -49,6 +49,16 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <!-- Added by Sangeeta to handle the HibernateException : Connection Pooling-->
+    <!--org.hibernate.HibernateException: The internal connection pool has reached its maximum
+        size and no connection is currently available! -->
+    <!-- Using a Third Party Connection Pooling utility - c3p0 dependency below: -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-c3p0</artifactId>
+      <version>5.3.6.Final</version>
+    </dependency>
   </dependencies>
 
 </project>
