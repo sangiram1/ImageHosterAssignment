@@ -5,6 +5,7 @@ import ImageHoster.model.Tag;
 import ImageHoster.model.User;
 import ImageHoster.service.ImageService;
 import ImageHoster.service.TagService;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -96,13 +97,38 @@ public class ImageController {
   //The method first needs to convert the list of all the tags to a string containing all the tags separated by a comma and then add this string in a Model type object
   //This string is then displayed by 'edit.html' file as previous tags of an image
   @RequestMapping(value = "/editImage")
-  public String editImage(@RequestParam("imageId") Integer imageId, Model model) {
-    Image image = imageService.getImage(imageId);
+  //Modified by Sangeeta as part of Part A : Bug-Fix#2.1 : Non-owner should not edit other's images
+  //Get the logged in user from the HttpSession object and the owner of the given image
+  //public String editImage(@RequestParam("imageId") Integer imageId, Model model) {
+  public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
 
+    //Modified by Sangeeta as part of Part A : Bug-Fix#2.1 : Non-owner should not edit other's images
+    //If the loggedInUserId is the same as the imageOwnerId of the image, route to edit.html
+    //If not, route to image.html page with an error message
+    //The error message should say "Only the owner of the image can edit the image"
+    /* Image image = imageService.getImage(imageId);
     String tags = convertTagsToString(image.getTags());
     model.addAttribute("image", image);
-    model.addAttribute("tags", tags);
-    return "images/edit";
+    model.addAttribute("tags", tags); */
+
+    Image image = imageService.getImage(imageId);
+    model.addAttribute("image", image);
+    User loggedInUser = (User) session.getAttribute("loggeduser");
+    Integer loggedInUserId = loggedInUser.getId();
+    Integer imageOwnerId = image.getUser().getId();
+
+    if (imageOwnerId == loggedInUserId) {
+      String tags = convertTagsToString(image.getTags()); //edit.html needs tags concatenated by commas
+      model.addAttribute("tags", tags);
+      return "images/edit";
+    } else {
+      String error = "Only the owner of the image can edit the image";
+      model.addAttribute("editError", error);
+      List<Tag> tags = image.getTags();
+      model.addAttribute("tags", tags); //image.html needs list of tags attached to the image
+      return "images/image";
+    }
+    //return "images/edit";
   }
 
   //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
