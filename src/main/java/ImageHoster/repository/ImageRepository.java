@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import java.util.List;
 
-//The annotation is a special type of @Component annotation which describes that the class defines a data repository
+//The annotation is a special type of @Component annotation which describes that the class defines
+// a data repository
 @Repository
 public class ImageRepository {
 
@@ -53,7 +54,8 @@ public class ImageRepository {
   public Image getImageByTitle(String title) {
     EntityManager em = emf.createEntityManager();
     try {
-      TypedQuery<Image> typedQuery = em.createQuery("SELECT i from Image i where i.title =:title", Image.class).setParameter("title", title);
+      TypedQuery<Image> typedQuery = em.createQuery("SELECT i from Image i where i.title =:title"
+          , Image.class).setParameter("title", title);
       return typedQuery.getSingleResult();
     } catch (NoResultException nre) {
       return null;
@@ -65,7 +67,8 @@ public class ImageRepository {
   //Returns the image fetched from the database
   public Image getImage(Integer imageId) {
     EntityManager em = emf.createEntityManager();
-    TypedQuery<Image> typedQuery = em.createQuery("SELECT i from Image i where i.id =:imageId", Image.class).setParameter("imageId", imageId);
+    TypedQuery<Image> typedQuery = em.createQuery("SELECT i from Image i where i.id =:imageId",
+        Image.class).setParameter("imageId", imageId);
     Image image = typedQuery.getSingleResult();
     return image;
   }
@@ -92,8 +95,10 @@ public class ImageRepository {
   //Creates an instance of EntityManager
   //Starts a transaction
   //Get the image with corresponding image id from the database
-  //This changes the state of the image model from detached state to persistent state, which is very essential to use the remove() method
-  //If you use remove() method on the object which is not in persistent state, an exception is thrown
+  //This changes the state of the image model from detached state to persistent state, which is very
+  // essential to use the remove() method
+  //If you use remove() method on the object which is not in persistent state, an exception is
+  // thrown
   //The transaction is committed if it is successful
   //The transaction is rolled back in case of unsuccessful transaction
   public void deleteImage(Integer imageId) {

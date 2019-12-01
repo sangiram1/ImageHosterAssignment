@@ -27,7 +27,8 @@ public class TagRepository {
   public Tag findTag(String tagName) {
     EntityManager em = emf.createEntityManager();
     try {
-      TypedQuery<Tag> typedQuery = em.createQuery("SELECT t from Tag t where t.name =:tagName", Tag.class).setParameter("tagName", tagName);
+      TypedQuery<Tag> typedQuery = em.createQuery("SELECT t from Tag t where t.name =:tagName",
+          Tag.class).setParameter("tagName", tagName);
       return typedQuery.getSingleResult();
     } catch (NoResultException nre) {
       return null;

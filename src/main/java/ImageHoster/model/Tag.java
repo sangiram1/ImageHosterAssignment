@@ -6,11 +6,15 @@ import java.util.List;
 //@Entity annotation specifies that the corresponding class is a JPA entity
 @Entity
 //@Table annotation provides more options to customize the mapping.
-//Here the name of the table to be created in the database is explicitly mentioned as 'Tags'. Hence the table named 'Tags' will be created in the database with all the columns mapped to all the attributes in 'Tag' class
+//Here the name of the table to be created in the database is explicitly mentioned as 'Tags'.
+// Hence the table named 'Tags' will be created in the database with all the columns mapped to
+// all the attributes in 'Tag' class
 /* Modified by Sangeeta to correct the issue with table creation for Many-to-Many Mapping
  * PostgreSQL is case-insensitive but for Hibernate, the name Tags is different from tags
- * Because of above deviation, Hibernate Dialect considers as if there is a change in Foreign Key  referring to "Tags"
- * Hence, hibernate.hbm2ddl.auto = update causes to re-create the images_Tags table with Foreign Key"Tags"
+ * Because of above deviation, Hibernate Dialect considers as if there is a change in Foreign Key
+ * referring to "Tags"
+ * Hence, hibernate.hbm2ddl.auto = update causes to re-create the images_Tags table
+ * with Foreign Key "Tags"
  */
 //@Table(name = "Tags")
 @Table(name = "tags")
@@ -27,12 +31,16 @@ public class Tag {
   @Column
   private String name;
 
-  // Write the annotation for many to many between images and tags where they are mapped by tags field in the images table
+  // Write the annotation for many to many between images and tags where they are mapped by tags
+  // field in the images table
   //The 'tags' table is mapped to 'images' table with Many:Many mapping
-  //One image can have multiple categories/tags and there can be multiple images under one category/tag
+  //One image can have multiple categories/tags and there can be multiple images under one
+  // category/tag
   //FetchType is LAZY
-  //Note that no column will be generated for this attribute in the database instead a new table will be created
-  //Since the mapping is Many to Many, a new table will be generated containing the two columns both referencing to the primary key of both the tables ('images', 'tags')
+  //Note that no column will be generated for this attribute in the database instead a new table
+  // will be created
+  //Since the mapping is Many to Many, a new table will be generated containing the two columns both
+  // referencing to the primary key of both the tables ('images', 'tags')
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
   private List<Image> images;
 

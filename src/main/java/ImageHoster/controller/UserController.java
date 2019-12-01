@@ -37,14 +37,18 @@ public class UserController {
     return "users/registration";
   }
 
-  //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
-  //This method calls the business logic and after the user record is persisted in the database, directs to login page
+  //This controller method is called when the request pattern is of type 'users/registration' and
+  // also the incoming request is of POST type
+  //This method calls the business logic and after the user record is persisted in the database,
+  // directs to login page
   @RequestMapping(value = "users/registration", method = RequestMethod.POST)
   //Modified by Sangeeta as part of Part B : Feature#1 - Implementing Password Strength Validation
-  //Pass the user entered password to checkPasswordStrength to find if it meets the required validations.
+  //Pass the user entered password to checkPasswordStrength to find if it meets the required
+  // validations.
   //Only if the entered password is valid, route to login.html page
   //If not, route to registration.html page with an error message
-  //The error message would say "Password must contain at least 1 alphabet, 1 number & 1 special character"
+  //The error message would say "Password must contain at least 1 alphabet, 1 number & 1
+  // special character"
   //public String registerUser(User user) {
   public String registerUser(User user, Model model) {
     //userService.registerUser(user);
@@ -78,10 +82,16 @@ public class UserController {
     return "users/login";
   }
 
-  //This controller method is called when the request pattern is of type 'users/login' and also the incoming request is of POST type
-  //The return type of the business logic is changed to User type instead of boolean type. The login() method in the business logic checks whether the user with entered username and password exists in the database and returns the User type object if user with entered username and password exists in the database, else returns null
-  //If user with entered username and password exists in the database, add the logged in user in the Http Session and direct to user homepage displaying all the images in the application
-  //If user with entered username and password does not exist in the database, redirect to the same login page
+  //This controller method is called when the request pattern is of type 'users/login' and also
+  // the incoming request is of POST type
+  //The return type of the business logic is changed to User type instead of boolean type.
+  // The login() method in the business logic checks whether the user with entered username and
+  // password exists in the database and returns the User type object if user with entered username
+  // and password exists in the database, else returns null
+  //If user with entered username and password exists in the database, add the logged in user in the
+  // Http Session and direct to user homepage displaying all the images in the application
+  //If user with entered username and password does not exist in the database, redirect to the same
+  // login page
   @RequestMapping(value = "users/login", method = RequestMethod.POST)
   public String loginUser(User user, HttpSession session) {
     User existingUser = userService.login(user);
@@ -93,11 +103,13 @@ public class UserController {
     }
   }
 
-  //This controller method is called when the request pattern is of type 'users/logout' and also the incoming request is of POST type
+  //This controller method is called when the request pattern is of type 'users/logout' and also
+  // the incoming request is of POST type
   //The method receives the Http Session and the Model type object
   //session is invalidated
   //All the images are fetched from the database and added to the model with 'images' as the key
-  //'index.html' file is returned showing the landing page of the application and displaying all the images in the application
+  //'index.html' file is returned showing the landing page of the application and displaying all the
+  // images in the application
   @RequestMapping(value = "users/logout", method = RequestMethod.POST)
   public String logout(Model model, HttpSession session) {
     session.invalidate();
